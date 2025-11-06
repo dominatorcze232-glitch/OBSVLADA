@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OBŠ-Vláda</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #ffd6d6, #ffe6ff);
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #fff8fc;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    h1 {
+      text-align: center;
+      color: #b30000;
+    }
+    h2 {
+      margin-top: 20px;
+      color: #800080;
+    }
+    button {
+      background-color: #ff66cc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 5px 0;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #ff3399;
+    }
+    .login, .dashboard, .study, .test {
+      display: none;
+    }
+    .link {
+      color: #ff0066;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .top-right {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 14px;
+      color: #b30000;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ff99cc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #ffccf2;
+    }
+    input[type="text"] {
+      padding: 5px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container login">
+  <h1>Přihlásit se</h1>
+  <label>Uživatel: </label><br>
+  <input type="text" id="username"><br>
+  <label>Heslo: </label><br>
+  <input type="password" id="password"><br>
+  <button onclick="login()">Přihlásit se</button>
+  <p>Nemáte účet? <span class="link" onclick="alert('Registrace není momentálně dostupná')">Zaregistrujte se</span></p>
+</div>
+
+<div class="container dashboard">
+  <div class="top-right" onclick="goHome()">Odejít na hl. stránku</div>
+  <h1>OBŠ-Vláda🏦</h1>
+  <h2>Prezident: Červeňák Dominik</h2>
+  <h2>Studování</h2>
+  <button onclick="showStudy()">Náboženství</button>
+  <button onclick="showTest()">Test</button>
+</div>
+
+<div class="container study">
+  <div class="top-right" onclick="showDashboard()">Zpět</div>
+  <h2>Náboženství</h2>
+  <table>
+    <tr><th>Jméno</th><th>Znak</th><th>Bůh</th></tr>
+    <tr><td>Kristián</td><td>✝️</td><td>Bůh křesťanů</td></tr>
+    <tr><td>Muslim</td><td>☪️</td><td>Alláh</td></tr>
+    <tr><td>Žid</td><td>✡️</td><td>Jahve</td></tr>
+  </table>
+</div>
+
+<div class="container test">
+  <div class="top-right" onclick="showDashboard()">Zpět</div>
+  <h2>Test: Poznej náboženství</h2>
+  <form id="testForm">
+    <label>✝️: </label><input type="text" name="q1"><br>
+    <label>☪️: </label><input type="text" name="q2"><br>
+    <label>✡️: </label><input type="text" name="q3"><br>
+    <button type="button" onclick="submitTest()">Odeslat Odpovědi</button>
+  </form>
+  <div id="result" style="margin-top:20px;"></div>
+</div>
+
+<script>
+  const user = "Červeňák Dominik";
+  const pass = "Dominik2014";
+
+  document.querySelector(".login").style.display = "block";
+
+  function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if(username === user && password === pass) {
+      document.querySelector(".login").style.display = "none";
+      document.querySelector(".dashboard").style.display = "block";
+    } else {
+      alert("Špatné uživatelské jméno nebo heslo!");
+    }
+  }
+
+  function showStudy() {
+    document.querySelector(".dashboard").style.display = "none";
+    document.querySelector(".study").style.display = "block";
+  }
+
+  function showTest() {
+    document.querySelector(".dashboard").style.display = "none";
+    document.querySelector(".test").style.display = "block";
+    document.getElementById("result").innerHTML = "";
+  }
+
+  function showDashboard() {
+    document.querySelector(".study").style.display = "none";
+    document.querySelector(".test").style.display = "none";
+    document.querySelector(".dashboard").style.display = "block";
+  }
+
+  function goHome() {
+    document.querySelector(".study").style.display = "none";
+    document.querySelector(".test").style.display = "none";
+    document.querySelector(".dashboard").style.display = "none";
+    document.querySelector(".login").style.display = "block";
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+  }
+
+  function submitTest() {
+    const start = performance.now();
+    const answers = ["křesťanství", "islám", "judaismus"];
+    const form = document.getElementById("testForm");
+    let correct = 0;
+    let total = answers.length;
+
+    for(let i=0; i<total; i++){
+      const userAnswer = form["q"+(i+1)].value.toLowerCase().trim();
+      if(userAnswer === answers[i]) correct++;
+    }
+
+    const end = performance.now();
+    const time = ((end-start)/1000).toFixed(2);
+
+    document.getElementById("result").innerHTML = `<h3>Výsledek:</h3>
+      Správně: ${correct} <br>
+      Špatně: ${total - correct} <br>
+      Čas: ${time} sekund`;
+  }
+</script>
+
+</body>
+</html>
